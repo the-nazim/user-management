@@ -2,7 +2,7 @@ const express = require('express');
 const User = require('./models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const auth = require('./auth');
+const auth = require('./middleware/auth');
 const router = express.Router();
 
 router.post('/login', async (req, res) => {
@@ -23,7 +23,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ msg: 'Invalid credentials' });
 
         const token = jwt.sign(
-            { id: user._id},
+            { id: user._id, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: 3600 }
         )
